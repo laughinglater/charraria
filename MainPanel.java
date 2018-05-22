@@ -1,5 +1,3 @@
-import sun.awt.Symbol;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
@@ -21,7 +19,7 @@ public class MainPanel extends JPanel {
     private Random rand=new Random();
 
     private StringBuffer BlockDescription=new StringBuffer();
-    private Font DescriptionFont=new Font("consolas",Font.BOLD,15);
+    private Font DescriptionFont=new Font("TimesNewRoman",Font.BOLD,15);
 
     private landGenerator Land=new landGenerator();
     private hero Hero = new hero();
@@ -56,6 +54,7 @@ public class MainPanel extends JPanel {
             Monster M=iM.next();
             if(distance(M.getX(),0,Hero.getX(),0)>dispearDistance){
                 iM.remove();
+                landGenerator.changeWorldBlock(M.getY(),M.getX(),new Air(0));
             }
             else if(!M.isAlive()){
                 //drops
@@ -65,6 +64,7 @@ public class MainPanel extends JPanel {
                 }
                 //remove
                 iM.remove();
+                landGenerator.changeWorldBlock(M.getY(),M.getX(),new Air(0));
             }
         }
         for(Monster M:Monsters){
@@ -311,9 +311,23 @@ public class MainPanel extends JPanel {
             return;   //out of world range
         }
         Block b=landGenerator.getWorldBlock(y,x);
+        Entity e=landGenerator.getWorldEntity(y,x);
         Entity inHand=Inventory.getCurrent();
         if(distance(x,y,Hero.getX(),Hero.getY())>inHand.getWorkDist()){
             return;  //out of work distance
+        }
+        if(e instanceof SolidMonsterEntity){
+            if(inHand instanceof Weapon){
+                if(System.currentTimeMillis()<TimeClicked+((Tools) inHand).Slowness){
+                    return;
+                }
+                TimeClicked=System.currentTimeMillis();
+                System.out.println("Monster is "+((Monster)((SolidMonsterEntity) e).m).name);
+                System.out.println("Life is "+((SolidMonsterEntity) e).m.getHP());
+                ((SolidMonsterEntity) e).m.modifyHP(-((Weapon) inHand).attack);
+                System.out.println("Life remains "+((SolidMonsterEntity) e).m.getHP());
+                return;
+            }
         }
         if(inHand instanceof LongRangedWeapon){
             if(System.currentTimeMillis()<TimeClicked+((Tools) inHand).Slowness){
@@ -325,19 +339,6 @@ public class MainPanel extends JPanel {
             projectiles.add(new Projectile(Hero.getX(),Hero.getY(),((LongRangedWeapon) inHand).attack,inHand.symbol,((LongRangedWeapon) inHand).SPEED,d,inHand.color));
         }
         else if(b instanceof solidBlock){
-            if(b instanceof SolidMonsterBlock){
-                if(inHand instanceof Weapon){
-                    if(System.currentTimeMillis()<TimeClicked+((Tools) inHand).Slowness){
-                        return;
-                    }
-                    TimeClicked=System.currentTimeMillis();
-                    System.out.println("Monster is "+((Monster)((SolidMonsterBlock) b).m).name);
-                    System.out.println("Life is "+((SolidMonsterBlock) b).m.getHP());
-                    ((SolidMonsterBlock) b).m.modifyHP(-((Weapon) inHand).attack);
-                    System.out.println("Life remains "+((SolidMonsterBlock) b).m.getHP());
-                    return;
-                }
-            }
             System.out.println("Block is "+b.symbol);
             System.out.println("life is:"+((solidBlock) b).life);
             if(inHand instanceof Tools){
@@ -375,7 +376,7 @@ public class MainPanel extends JPanel {
                     landGenerator.changeWorldBlock(y,x,newBlock);
                     //dynamic system to new an unknown class!!!
                     System.out.println("block added:"+newBlock.symbol);
-                }catch (Exception e){e.printStackTrace();}
+                }catch (Exception ex){ex.printStackTrace();}
             }
         }
     }
@@ -398,6 +399,9 @@ public class MainPanel extends JPanel {
             if (Monsters.size() < MaxMonsterNum) {
                 int x = Hero.getX()+rand.nextInt(landGenerator.getWinOffsetX()*4)-2*landGenerator.getWinOffsetX();
                 int y = Hero.getY()+rand.nextInt(landGenerator.getWinOffsetY()*4)-2*landGenerator.getWinOffsetY();
+                if(!(x>=0&&x<landGenerator.getWorWidth() && y>=0 && y<landGenerator.getWorHeight())){
+                    return;   //out of world range
+                }
                 if (landGenerator.getWorldBlock(y, x) instanceof Fluid) {
                     Slime s=new Slime(x,y);
                     Monsters.add(s);

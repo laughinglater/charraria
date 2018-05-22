@@ -40,73 +40,80 @@ public abstract class Monster extends Mobs{
             case L:
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x-1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x-1);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         x -= 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 break;
             case R:
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x+1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x+1);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         x += 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 break;
             case JUMP:
                 for(int s=0;s<JUMPING_ABILITY;s++) {
                     Block b=landGenerator.getWorldBlock(y+1,x);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y+1,x);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         y += 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 break;
             case LJUMP:
                 for(int s=0;s<JUMPING_ABILITY;s++) {
                     Block b=landGenerator.getWorldBlock(y+1,x);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y+1,x);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         y += 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x-1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x-1);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         x -= 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 break;
             case RJUMP:
                 for(int s=0;s<JUMPING_ABILITY;s++) {
                     Block b=landGenerator.getWorldBlock(y+1,x);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y+1,x);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         y += 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x+1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x+1);
+                    if ((!(e instanceof SolidHeroEntity))&&b.permeable) {
                         x += 1;
                     }
-                    else if(b instanceof SolidHeroBlock){
-                        ((SolidHeroBlock) b).m.modifyHP(-atk);
+                    else if(e instanceof SolidHeroEntity){
+                        ((SolidHeroEntity) e).m.modifyHP(-atk);
                     }
                 }
                 break;
@@ -115,11 +122,12 @@ public abstract class Monster extends Mobs{
         }
         //gravity
         Block b=landGenerator.getWorldBlock(y-1,x);
-        if(b.permeable){
+        Entity e=landGenerator.getWorldEntity(y - 1,x);
+        if((!(e instanceof SolidHeroEntity))&&b.permeable){
             y--;
         }
-        else if(b instanceof SolidHeroBlock){
-            ((SolidHeroBlock) b).m.modifyHP(-atk);
+        else if(e instanceof SolidHeroEntity){
+            ((SolidHeroEntity) e).m.modifyHP(-atk);
         }
         else {
             //when landed, reset jump lock.
@@ -138,8 +146,6 @@ public abstract class Monster extends Mobs{
             g.setColor(MonsterColor);
             g.drawString(String.valueOf(Symbol),(x-(landGenerator.Focus_x-landGenerator.getWinOffsetX()))*landGenerator.getFontSize(),MainWindow.getWinHeight()-(y-(landGenerator.Focus_y-landGenerator.getWinOffsetY()))*landGenerator.getFontSize());
         }
-
-
         slowness_timer++;
         if(slowness_timer==slowness) {
             slowness_timer=0;
@@ -148,9 +154,9 @@ public abstract class Monster extends Mobs{
         else if(!Direction.containDir(dir,Direction.JUMP)){
             dir=Direction.STOP;
         }
-        landGenerator.changeWorldBlock(y,x,new Air(0));
+        landGenerator.changeWorldEntity(y,x,new Entity());
         move();
-        landGenerator.changeWorldBlock(y,x,new SolidMonsterBlock(atk,this));
+        landGenerator.changeWorldEntity(y,x,new SolidMonsterEntity(atk,this));
     }
     public ArrayList<Entity> Drops(){return null;};
     Monster(int _x,int _y, int _atk, int _speed, char _s, int _ja, int _jh,int _slow,int _hp,Color _color,String _name){
@@ -177,7 +183,7 @@ class Slime extends Monster{
         else return Color.GREEN;
     }
     Slime(int x,int y){
-        super(x,y,1,1,'S',2,10,10,5,Color.GREEN,"Slime");
+        super(x,y,1,1,'S',2,5,10,5,Color.GREEN,"Slime");
         MonsterColor=SlimeColorGenerator();
         ai=new SlimeAI();
     }

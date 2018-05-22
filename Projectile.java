@@ -1,5 +1,4 @@
 import java.awt.*;
-import java.util.ArrayList;
 
 public class Projectile {
     public int x;
@@ -20,12 +19,6 @@ public class Projectile {
                     if (b.permeable) {
                         x -= 1;
                     }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
-                    }
                 }
                 break;
             case R:
@@ -33,12 +26,6 @@ public class Projectile {
                     Block b=landGenerator.getWorldBlock(y,x+1);
                     if (b.permeable) {
                         x += 1;
-                    }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
                     }
                 }
                 break;
@@ -48,12 +35,6 @@ public class Projectile {
                     if (b.permeable) {
                         y += 1;
                     }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
-                    }
                 }
                 break;
             case LJUMP:
@@ -62,23 +43,11 @@ public class Projectile {
                     if (b.permeable) {
                         y += 1;
                     }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
-                    }
                 }
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x-1);
                     if (b.permeable) {
                         x -= 1;
-                    }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
                     }
                 }
                 break;
@@ -88,23 +57,11 @@ public class Projectile {
                     if (b.permeable) {
                         y += 1;
                     }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
-                    }
                 }
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x+1);
                     if (b.permeable) {
                         x += 1;
-                    }
-                    else{
-                        if(b instanceof SolidMobsBlock) {
-                            ((SolidMobsBlock) b).m.modifyHP(-attack);
-                        }
-                        Flag_hit=1;
                     }
                 }
                 break;
@@ -126,7 +83,6 @@ public class Projectile {
         */
     }
     public void draw(Graphics g){
-        System.out.println("draw projectile");
         if(x>=landGenerator.Focus_x-landGenerator.getWinOffsetX() && x<= landGenerator.Focus_x+landGenerator.getWinOffsetX() && y>=landGenerator.Focus_y-landGenerator.getWinOffsetY() && y<=landGenerator.Focus_y+landGenerator.getWinOffsetY()){
             if(Flag_hit==0) {
                 g.setColor(ProjectileColor);
@@ -144,5 +100,14 @@ public class Projectile {
         SPEED=_Spd;
         Symbol=_sym;
     }
+}
+
+class LinearProjectile{
+    public int x0;
+    public int y0;
+    public int x1;
+    public int y1;
+
+
 }
 

@@ -18,6 +18,8 @@ public abstract class Block {
 
 abstract class solidBlock extends Block {
     protected int life;
+    protected int Flag_damaged;
+    public void modifyHP(int x) {life+=x;Flag_damaged=5;}
     solidBlock(){
         super();
         permeable=false;
@@ -31,12 +33,16 @@ abstract class Fluid extends Block{
    }
 }
 
+abstract class backGroundBlock extends Block{
+
+}
+
 class Dirt extends solidBlock {
     Dirt(){
         super();
         BlockNo=1;
         life=30;
-        symbol='+';
+        symbol='⛶';
         color= new Color(80,26,0); //brown
         description="--dirt--";
 
@@ -179,46 +185,3 @@ class flower extends solidBlock{
     }
 }
 
-abstract class SolidMobsBlock extends solidBlock{
-    public Mobs m;
-    SolidMobsBlock(){
-        super();
-    }
-}
-
-class SolidMonsterBlock extends SolidMobsBlock{
-    public int damage;
-    SolidMonsterBlock(int _dmg, Monster _m){
-        super();
-        BlockNo=12;
-        life=999999;
-        symbol='.';
-        color=new Color(0,0,0,0);
-        description="--Monster--";
-        damage=_dmg;
-        m=_m;
-    }
-}
-
-class SolidHeroBlock extends SolidMobsBlock{
-    SolidHeroBlock(hero _h){
-        super();
-        BlockNo=13;
-        life=999999;
-        symbol='.';
-        color=new Color(0,0,0,0);
-        description="--Myself--";
-        m=_h;
-    }
-}
-
-class SolidProjectileBlock extends solidBlock{
-    SolidProjectileBlock(){
-        super();
-        BlockNo=14;
-        symbol='.';
-        color=new Color(0,0,0,0);
-        life=9999999;
-        description="--projectile--";
-    }
-}

@@ -1,11 +1,8 @@
-import javafx.concurrent.WorkerStateEvent;
-import sun.awt.Symbol;
-
 import java.awt.*;
 
-public abstract class Entity {
+public class Entity {
     protected static final int Block2EntityOffset=1000;
-    protected int EntityNo;
+    protected int EntityNo = 0;  //null entity
     protected char symbol;
     protected Color color;
     protected int Total;
@@ -75,7 +72,7 @@ class Hand extends Weapon{
         DestroyAbility=5;
         attack=1;
         Slowness=100;  //ms
-        EntityNo=0;
+        EntityNo=1;
         symbol='@';
         color=Color.WHITE;
         description="Bare Hand is the best!";
@@ -89,7 +86,7 @@ class HandOfGod extends Weapon{
         DestroyAbility=999;
         attack=999;
         Slowness=10;
-        EntityNo=0;
+        EntityNo=1;
         symbol='@';
         color=Color.orange;
         description="ONLY for DEBUG!";
@@ -103,10 +100,40 @@ class Arrow extends LongRangedWeapon{
         DestroyAbility=0;
         attack=999;
         Slowness=1000;
-        EntityNo=1;
+        EntityNo=2;
         symbol='←';
         WorkDist=999;
         SPEED=1;
     }
 }
 
+abstract class SolidMobsEntity extends Entity{
+    public Mobs m;
+    SolidMobsEntity(){
+        super();
+    }
+}
+
+class SolidMonsterEntity extends SolidMobsEntity{
+    public int damage;
+    SolidMonsterEntity(int _dmg, Monster _m){
+        super();
+        EntityNo=12;
+        symbol='.';
+        color=new Color(0,0,0,0);
+        description="--Monster--";
+        damage=_dmg;
+        m=_m;
+    }
+}
+
+class SolidHeroEntity extends SolidMobsEntity{
+    SolidHeroEntity(hero _h){
+        super();
+        EntityNo=13;
+        symbol='.';
+        color=new Color(0,0,0,0);
+        description="--Myself--";
+        m=_h;
+    }
+}

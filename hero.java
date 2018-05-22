@@ -63,18 +63,18 @@ public class hero extends Mobs{
         if(Flag_HPModified!=0){
             Flag_HPModified--;
             if(Flag_HPModified%2==0)
-                g.drawString(String.valueOf(Symbol),MainWindow.getWinWidth()/2-landGenerator.getFontSize()/2-2,MainWindow.getWinHeight()/2+6); //????????
+                g.drawString(String.valueOf(Symbol),MainWindow.getWinWidth()/2-landGenerator.getFontSize()/2+5,MainWindow.getWinHeight()/2+7); //????????
         }
-        else g.drawString(String.valueOf(Symbol),MainWindow.getWinWidth()/2-landGenerator.getFontSize()/2-2,MainWindow.getWinHeight()/2+6); //????????
+        else g.drawString(String.valueOf(Symbol),MainWindow.getWinWidth()/2-landGenerator.getFontSize()/2+5,MainWindow.getWinHeight()/2+7); //????????
 
         g.setColor(Color.RED);
         StringBuffer hearts=new StringBuffer();
         for(int i=0;i<HP;i++) hearts.append(HeartSymbol);
         g.drawString(hearts.toString(),MainWindow.getWinWidth() - 150, 20);
         //move and change world
-        landGenerator.changeWorldBlock(y,x,new Air(0));
+        landGenerator.changeWorldEntity(y,x,new Entity());
         move();
-        landGenerator.changeWorldBlock(y,x,new SolidHeroBlock(this));
+        landGenerator.changeWorldEntity(y,x,new SolidHeroEntity(this));
     }
     private Direction dir=Direction.STOP;
     private int JUMPloop=0;
@@ -86,6 +86,7 @@ public class hero extends Mobs{
     public void PrintDeath(){
 
     }
+
     private void move(){
         if(JUMP_flag==0) {
             if (Direction.containDir(dir, Direction.JUMP)) {
@@ -107,73 +108,80 @@ public class hero extends Mobs{
             case L:
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x-1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x-1);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         x -= 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 break;
             case R:
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x+1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x+1);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         x += 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 break;
             case JUMP:
                 for(int s=0;s<JUMPING_ABILITY;s++) {
                     Block b=landGenerator.getWorldBlock(y+1,x);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y+1,x);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         y += 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 break;
             case LJUMP:
                 for(int s=0;s<JUMPING_ABILITY;s++) {
                     Block b=landGenerator.getWorldBlock(y+1,x);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y+1,x);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         y += 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x-1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x-1);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         x -= 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 break;
             case RJUMP:
                 for(int s=0;s<JUMPING_ABILITY;s++) {
                     Block b=landGenerator.getWorldBlock(y+1,x);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y+1,x);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         y += 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 for(int s=0;s<SPEED;s++) {
                     Block b=landGenerator.getWorldBlock(y,x+1);
-                    if (b.permeable) {
+                    Entity e=landGenerator.getWorldEntity(y,x+1);
+                    if ((!(e instanceof SolidMonsterEntity))&&b.permeable) {
                         x += 1;
                     }
-                    else if(b instanceof SolidMonsterBlock){
-                        modifyHP(-((SolidMonsterBlock) b).damage);
+                    else if(e instanceof SolidMonsterEntity){
+                        modifyHP(-((SolidMonsterEntity) e).damage);
                     }
                 }
                 break;
@@ -182,12 +190,13 @@ public class hero extends Mobs{
         }
         //gravity
         Block b=landGenerator.getWorldBlock(y-1,x);
-        if(b.permeable){
+        Entity e=landGenerator.getWorldEntity(y-1,x);
+        if((!(e instanceof SolidMonsterEntity))&&b.permeable){
             y--;
             fallingDistance++;
         }
-        else if(b instanceof SolidMonsterBlock){
-            modifyHP(-((SolidMonsterBlock) b).damage);
+        else if(e instanceof SolidMonsterEntity){
+            modifyHP(-((SolidMonsterEntity) e).damage);
         }
         else {
             //when landed, reset jump lock.
