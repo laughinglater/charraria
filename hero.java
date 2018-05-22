@@ -3,8 +3,8 @@ import java.awt.*;
 import java.util.ArrayList;
 
 abstract class Mobs{
-    protected int x;
-    protected int y;
+    protected static int x;
+    protected static int y;
     protected int HP;
     public int getHP(){
         return HP;
@@ -12,10 +12,10 @@ abstract class Mobs{
     public void modifyHP(int x){
         HP+=x;
     }
-    public int getX(){
+    public static int getX(){
         return x;
     }
-    public int getY(){
+    public static int getY(){
         return y;
     }
 }

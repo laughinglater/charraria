@@ -39,11 +39,17 @@ public class landGenerator{
     public static Block getWorldBlock(int i,int j){
         return world[i][j];
     }
+    public static Block getbackWorldBlock(int i,int j){
+       return backWorld[i][j];
+    }
     public static Entity getWorldEntity(int i,int j){
         return frontWorld[i][j];
     }
     public static void changeWorldBlock(int i,int j,Block b){
         world[i][j]=b;
+    }
+    public static void changebackWorldBlock(int i,int j,Block b){
+        backWorld[i][j]=b;
     }
     public static void changeWorldEntity(int i,int j,Entity e){
         frontWorld[i][j]=e;
@@ -71,7 +77,7 @@ public class landGenerator{
                         g.setFont(mainFont);
                         Block b = world[j][i];
                         g.setColor(b.color);
-                        //正在被破坏，闪烁。
+                        //姝ｅ湪琚牬鍧忥紝闂儊銆�
                         if (b instanceof solidBlock && ((solidBlock) b).Flag_damaged != 0) {
                             System.out.println("block blinking");
                             if (--((solidBlock) b).Flag_damaged % 2 == 0)

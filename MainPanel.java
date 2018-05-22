@@ -23,7 +23,13 @@ public class MainPanel extends JPanel {
 
     private landGenerator Land=new landGenerator();
     private hero Hero = new hero();
-    private inventory Inventory = new inventory();
+    private static inventory Inventory = new inventory();
+    public static inventory getInventory() {
+    	return Inventory;
+    }
+    public static void setInventory(inventory Inv) {
+    	Inventory=Inv;
+    }
 
     MainPanel(){
         setFocusable(true);
